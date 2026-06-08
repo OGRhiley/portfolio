@@ -23,15 +23,15 @@ const pageContent: Record<PageKey, string> = {
         </div>
       </div>
       <p>
-        Most of what I develop uses Java and Kotlin. FRC robot code that has to work on the field, and
-        Minecraft plugins for ShoreSMP. I like building things that real people end up using, and
+        My main tech stack is Java and Kotlin. I maintain FRC robot code that has to work on the field, and
+        Minecraft plugins for minecraft servers, like ShoreSMP. I like building things that real people end up using, and
         figuring out what breaks once they do.
       </p>
 
       <div class="hero-metrics" aria-label="Quick stats">
         <article>
           <strong>Currently</strong>
-          <span>Lead programmer for an FRC team and maintaining the Java/Kotlin plugin stack behind ShoreSMP.</span>
+          <span>Lead programmer for an FRC team and maintaining the Java/Kotlin plugin stack behind ShoreSMP's mainstream gamemodes.</span>
         </article>
         <article>
           <strong>Working With</strong>
@@ -50,13 +50,12 @@ const pageContent: Record<PageKey, string> = {
         <p>Built + Maintained</p>
         <h3>FRC Lead Programmer</h3>
         <p>
-          I wrote my team's robot codebase from scratch and maintain it season to season. It's coded in Java on top of WPILib's command-based framework.
+          I wrote my team's robot codebase from scratch and actively maintain it season to season. It's coded in Java on top of WPILib's command-based framework.
         </p>
         <ul class="work-points">
           <li>Tuned autonomous routines that hold up across different alliance partners and field variance</li>
           <li>Built reusable subsystem and command abstractions the rest of the programming team extends</li>
-          <li>Drove bring-up, on-field debugging, and competition deploys through eliminations</li>
-          <li>Maintain logging and replay tooling so post-match issues get diagnosed instead of guessed at</li>
+          <li>Implement logging and replay tooling so post-match issues get diagnosed instead of guessed at</li>
         </ul>
       </article>
       <article class="work-card is-linked">
@@ -66,15 +65,15 @@ const pageContent: Record<PageKey, string> = {
         <h3>ArchMC Software Engineer (Rule Your Own Game, Inc)</h3>
         <p>
           Software engineer building custom Minecraft gamemodes for ArchMC, with services orchestrated
-          on Kubernetes. I work across the stack: writing Java/Kotlin plugins for the gameplay
+          on Kubernetes. I worked across the stack: writing and maintaining Java/Kotlin plugins for the gameplay
           logic, configuring deployments and scaling, and tightening the pipeline that gets changes
           from a PR into a live server.
         </p>
         <ul class="work-points">
           <li>Implemented gamemode features and core mechanics players actually interact with</li>
           <li>Hunted down performance and reliability bugs in production server code</li>
+          <li>Learned the ins and outs of Software Engineering in a real company, and how to work effectively on a team</li>
           <li>Configured and maintained Kubernetes workloads for game services</li>
-          <li>Improved deploy and debug workflows for the engineering team</li>
         </ul>
       </article>
       <article class="work-card is-linked">
@@ -184,7 +183,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <aside class="left-rail">
     <p class="rail-kicker">Digital Portfolio</p>
     <h1>Rhiley</h1>
-    <p class="rail-subtitle">High school software engineer building Java and Kotlin backends for robotics and game servers.</p>
+    <p class="rail-subtitle">High school software engineer building Java and Kotlin projects for robotics and minecraft servers.</p>
     <a class="discord-status" data-status="loading" href="https://discord.com/users/659881222897664017" target="_blank" rel="noreferrer" aria-label="Discord status">
       <span class="discord-dot"></span>
       <span class="discord-text">Connecting Discord…</span>
