@@ -45,6 +45,10 @@ body::before {
   transition: background-position 120ms ease;
 }
 
+body.is-touch::before {
+  display: none;
+}
+
 #app {
   max-width: 1140px;
   margin: 0 auto;
@@ -127,6 +131,12 @@ body::before {
   letter-spacing: 0.18em;
   color: var(--kicker);
   font-weight: 700;
+}
+
+.view-counter {
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
 .discord-status {
@@ -818,6 +828,25 @@ h1 {
 
   .contact-subgrid {
     grid-template-columns: 1fr;
+  }
+
+  .left-rail,
+  .hero,
+  .journey,
+  .contact-band,
+  .work-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg-soft);
+  }
+
+  .blob {
+    filter: blur(64px);
+    opacity: 0.14;
+  }
+
+  .grid-noise {
+    display: none;
   }
 }
 

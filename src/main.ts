@@ -181,7 +181,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 <main class="site-shell">
   <aside class="left-rail">
-    <p class="rail-kicker">Digital Portfolio</p>
+    <p class="rail-kicker">Digital Portfolio<span class="view-counter" aria-label="Site views"> · — views</span></p>
     <h1>Rhiley</h1>
     <p class="rail-subtitle">High school software engineer building Java and Kotlin projects for robotics and minecraft servers.</p>
     <a class="discord-status" data-status="loading" href="https://discord.com/users/659881222897664017" target="_blank" rel="noreferrer" aria-label="Discord status">
@@ -229,6 +229,34 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <section class="content-flow">${pageContent[page]}</section>
 </main>
 `
+
+;(async function trackViews() {
+  const NAMESPACE = 'rhiley-portfolio'
+  const KEY = 'views'
+  const LOCAL_KEY = 'rhiley_portfolio_counted'
+  const el = document.querySelector<HTMLSpanElement>('.view-counter')
+  if (!el) return
+
+  const isNew = !localStorage.getItem(LOCAL_KEY)
+  const url = isNew
+    ? `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`
+    : `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/`
+
+  try {
+    const res = await fetch(url)
+    const data = await res.json()
+    const count: number | undefined = data.count ?? data.value ?? data.data?.count
+    if (typeof count === 'number') {
+      el.textContent = ` · ${count.toLocaleString()} views`
+      if (isNew) localStorage.setItem(LOCAL_KEY, '1')
+    } else {
+      el.textContent = ''
+    }
+  } catch (err) {
+    console.warn('[views] failed to load', err)
+    el.textContent = ''
+  }
+})()
 
 type LanyardStatus = 'online' | 'idle' | 'dnd' | 'offline'
 
@@ -541,10 +569,13 @@ function markDiscordOffline(message = 'Discord offline') {
   })
 })()
 
+const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 const sparkleCanvas = document.querySelector<HTMLCanvasElement>('.sparkles')
-if (sparkleCanvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+if (sparkleCanvas && !isReducedMotion) {
   const ctx = sparkleCanvas.getContext('2d')!
-  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1 : 2)
 
   type Sparkle = {
     x: number
@@ -570,8 +601,10 @@ if (sparkleCanvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matc
     sparkleCanvas!.style.height = `${height}px`
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-    const count = Math.round((width * height) / 9000)
-    sparkles = Array.from({ length: Math.min(count, 220) }, () => ({
+    const divisor = isTouchDevice ? 28000 : 9000
+    const cap = isTouchDevice ? 60 : 220
+    const count = Math.round((width * height) / divisor)
+    sparkles = Array.from({ length: Math.min(count, cap) }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       vx: (Math.random() - 0.5) * 0.18,
@@ -609,29 +642,36 @@ if (sparkleCanvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matc
 
       const twinkle = (Math.sin(s.phase) + 1) / 2
       const alpha = Math.min(1, s.baseAlpha * (0.55 + twinkle * 0.7))
+      if (!isTouchDevice) {
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(160, 220, 255, ${alpha * 0.18})`
+        ctx.fill()
+      }
       ctx.beginPath()
       ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2)
       ctx.fillStyle = `rgba(240, 248, 255, ${alpha})`
-      ctx.shadowBlur = 14
-      ctx.shadowColor = 'rgba(160, 220, 255, 0.95)'
       ctx.fill()
     }
-    ctx.shadowBlur = 0
     requestAnimationFrame(draw)
   }
 
   requestAnimationFrame(draw)
 }
 
-let cursorFrame = 0
-window.addEventListener('pointermove', (event) => {
-  if (cursorFrame) return
-  cursorFrame = requestAnimationFrame(() => {
-    document.body.style.setProperty('--cursor-x', `${event.clientX}px`)
-    document.body.style.setProperty('--cursor-y', `${event.clientY}px`)
-    cursorFrame = 0
-  })
-}, { passive: true })
+if (!isTouchDevice) {
+  let cursorFrame = 0
+  window.addEventListener('pointermove', (event) => {
+    if (cursorFrame) return
+    cursorFrame = requestAnimationFrame(() => {
+      document.body.style.setProperty('--cursor-x', `${event.clientX}px`)
+      document.body.style.setProperty('--cursor-y', `${event.clientY}px`)
+      cursorFrame = 0
+    })
+  }, { passive: true })
+} else {
+  document.body.classList.add('is-touch')
+}
 
 const revealElements = document.querySelectorAll<HTMLElement>('.reveal')
 const revealObserver = new IntersectionObserver(
