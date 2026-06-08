@@ -577,6 +577,20 @@ if (sparkleCanvas && !isReducedMotion) {
   const ctx = sparkleCanvas.getContext('2d')!
   const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1 : 2)
 
+  const SPRITE_SIZE = 64
+  const sparkleSprite = document.createElement('canvas')
+  sparkleSprite.width = SPRITE_SIZE
+  sparkleSprite.height = SPRITE_SIZE
+  const sctx = sparkleSprite.getContext('2d')!
+  const cx = SPRITE_SIZE / 2
+  const grad = sctx.createRadialGradient(cx, cx, 0, cx, cx, cx)
+  grad.addColorStop(0, 'rgba(255, 255, 255, 1)')
+  grad.addColorStop(0.18, 'rgba(220, 240, 255, 0.85)')
+  grad.addColorStop(0.45, 'rgba(160, 220, 255, 0.25)')
+  grad.addColorStop(1, 'rgba(125, 211, 252, 0)')
+  sctx.fillStyle = grad
+  sctx.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE)
+
   type Sparkle = {
     x: number
     y: number
@@ -642,17 +656,11 @@ if (sparkleCanvas && !isReducedMotion) {
 
       const twinkle = (Math.sin(s.phase) + 1) / 2
       const alpha = Math.min(1, s.baseAlpha * (0.55 + twinkle * 0.7))
-      if (!isTouchDevice) {
-        ctx.beginPath()
-        ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(160, 220, 255, ${alpha * 0.18})`
-        ctx.fill()
-      }
-      ctx.beginPath()
-      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(240, 248, 255, ${alpha})`
-      ctx.fill()
+      const drawSize = s.size * (isTouchDevice ? 5 : 8)
+      ctx.globalAlpha = alpha
+      ctx.drawImage(sparkleSprite, s.x - drawSize / 2, s.y - drawSize / 2, drawSize, drawSize)
     }
+    ctx.globalAlpha = 1
     requestAnimationFrame(draw)
   }
 
