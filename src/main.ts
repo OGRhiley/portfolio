@@ -570,10 +570,9 @@ function markDiscordOffline(message = 'Discord offline') {
 })()
 
 const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches
-const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const sparkleCanvas = document.querySelector<HTMLCanvasElement>('.sparkles')
-if (sparkleCanvas && !isReducedMotion) {
+if (sparkleCanvas) {
   const ctx = sparkleCanvas.getContext('2d')!
   const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1 : 2)
 
@@ -585,8 +584,9 @@ if (sparkleCanvas && !isReducedMotion) {
   const cx = SPRITE_SIZE / 2
   const grad = sctx.createRadialGradient(cx, cx, 0, cx, cx, cx)
   grad.addColorStop(0, 'rgba(255, 255, 255, 1)')
-  grad.addColorStop(0.18, 'rgba(220, 240, 255, 0.85)')
-  grad.addColorStop(0.45, 'rgba(160, 220, 255, 0.25)')
+  grad.addColorStop(0.08, 'rgba(255, 255, 255, 1)')
+  grad.addColorStop(0.25, 'rgba(220, 240, 255, 0.9)')
+  grad.addColorStop(0.5, 'rgba(160, 220, 255, 0.35)')
   grad.addColorStop(1, 'rgba(125, 211, 252, 0)')
   sctx.fillStyle = grad
   sctx.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE)
@@ -655,14 +655,15 @@ if (sparkleCanvas && !isReducedMotion) {
       if (s.x > width + 4) s.x = -4
 
       const twinkle = (Math.sin(s.phase) + 1) / 2
-      const alpha = Math.min(1, s.baseAlpha * (0.55 + twinkle * 0.7))
-      const drawSize = s.size * (isTouchDevice ? 5 : 8)
+      const alpha = Math.min(1, s.baseAlpha * (0.6 + twinkle * 0.6))
+      const drawSize = s.size * (isTouchDevice ? 3 : 6)
       ctx.globalAlpha = alpha
       ctx.drawImage(sparkleSprite, s.x - drawSize / 2, s.y - drawSize / 2, drawSize, drawSize)
     }
     ctx.globalAlpha = 1
     requestAnimationFrame(draw)
   }
+
 
   requestAnimationFrame(draw)
 }
