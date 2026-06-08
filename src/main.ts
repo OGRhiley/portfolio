@@ -23,7 +23,7 @@ const pageContent: Record<PageKey, string> = {
         </div>
       </div>
       <p>
-        Most of what I do is Java and Kotlin. FRC robot code that has to work on the field, and
+        Most of what I develop uses Java and Kotlin. FRC robot code that has to work on the field, and
         Minecraft plugins for ShoreSMP. I like building things that real people end up using, and
         figuring out what breaks once they do.
       </p>
